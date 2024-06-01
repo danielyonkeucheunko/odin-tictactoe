@@ -48,7 +48,7 @@ function Player(name, letter) {
     return { name, letter };
 }
 
-function GameLogic(
+const GameLogic = (function (
     player1 = Player("Player1", "X"),
     player2 = Player("Player2", "O")
 ) {
@@ -102,10 +102,6 @@ function GameLogic(
         }
     };
 
-    const getWinner = () => {
-        return winner;
-    };
-
     const makeMove = (letter) => {
         let row = parseInt(prompt("Enter the row you would like to play in?"));
         let column = parseInt(
@@ -120,7 +116,6 @@ function GameLogic(
         }
 
         gameboard.getGameboard()[row][column].setValue(letter);
-        gameboard.print();
     };
 
     const checkDraw = () => {
@@ -132,27 +127,37 @@ function GameLogic(
                 }
             }
         }
-
         draw = true;
     };
 
-    while (winner === " " && draw === false) {
-        currentMove =
-            currentMove === player2.letter ? player1.letter : player2.letter;
-        makeMove(currentMove);
-        checkWinners();
-        checkDraw();
-        console.log(draw);
-        console.log(gameboard.print());
-    }
+    const run = () => {
+        while (winner === " " && draw === false) {
+            currentMove =
+                currentMove === player2.letter
+                    ? player1.letter
+                    : player2.letter;
+            makeMove(currentMove);
+            checkWinners();
+            checkDraw();
+            console.log(gameboard.print());
+        }
 
-    if (draw) {
-        console.log("DRAW");
-    } else {
-        console.log(`${currentMove} has Won!`);
-    }
+        winner !== " "
+            ? console.log(`${currentMove} has Won!`)
+            : console.log("DRAW");
+    };
 
-    return { checkWinners, getWinner, checkDraw };
-}
+    const reset = () => {
+        gameboard.reset();
+        winner = " ";
+        currentMove = player2.letter;
+        draw = false;
+    };
 
-GameLogic();
+    const startUp = () => {
+        reset();
+        run();
+    };
+
+    return { startUp };
+})();
