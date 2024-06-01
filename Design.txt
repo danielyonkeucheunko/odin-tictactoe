@@ -1,0 +1,20 @@
+Different Elements of the Tic Tac Toe game.
+
+-   Gameboard
+
+    -   print function (to temporarily make the game in the console)
+    -   getter function
+    -   reset function
+
+-   Cell
+
+    -   getter
+    -   setter
+
+-   Player
+
+    -
+
+-   GameLogic
+    -   function that checks for wins
+    -   make move function (to be done in console)
