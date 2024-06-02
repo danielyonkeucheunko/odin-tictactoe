@@ -107,21 +107,6 @@ const GameLogic = (function (
         }
     };
 
-    const makeMove = (letter) => {
-        let cell = parseInt(
-            prompt("Enter the cell you would like to play in?")
-        );
-
-        while (gameboard.getGameboard()[cell].getValue() !== " ") {
-            alert("Invalid. Try Again!");
-            cell = parseInt(
-                prompt("Enter the cell you would like to play in?")
-            );
-        }
-
-        gameboard.getGameboard()[cell].setValue(letter);
-    };
-
     const checkDraw = () => {
         for (let i = 0; i < 9; i++) {
             if (gameboard.getGameboard()[i].getValue() === " ") {
@@ -132,34 +117,86 @@ const GameLogic = (function (
         draw = true;
     };
 
-    const run = () => {
-        while (winner === " " && draw === false) {
+    const makeMove = (index) => {
+        if (
+            gameboard.getGameboard()[index].getValue() === " " &&
+            winner === " " &&
+            draw == false
+        ) {
+            gameboard.getGameboard()[index].setValue(currentMove);
+
+            checkWinners();
+            checkDraw();
+            Renderer.render();
+
+            console.log(gameboard.print());
+            if (winner !== " ") {
+                Renderer.displayWinner(currentMove);
+            } else if (draw && winner === " ") {
+                Renderer.displayDraw();
+            }
             currentMove =
                 currentMove === player2.letter
                     ? player1.letter
                     : player2.letter;
-            makeMove(currentMove);
-            checkWinners();
-            checkDraw();
-            console.log(gameboard.print());
         }
-
-        winner !== " "
-            ? console.log(`${currentMove} has Won!`)
-            : console.log("DRAW");
     };
 
     const reset = () => {
         gameboard.reset();
+        Renderer.reset();
+        Renderer.resetOutcome();
         winner = " ";
         currentMove = player2.letter;
         draw = false;
     };
 
-    const startUp = () => {
-        reset();
-        run();
+    return { reset, makeMove };
+})();
+
+const Renderer = (function () {
+    document.documentElement
+        .querySelectorAll("button[index]")
+        .forEach((button) => {
+            button.addEventListener("click", (event) => {
+                let index = parseInt(event.target.getAttribute("index"));
+                GameLogic.makeMove(index);
+            });
+        });
+
+    document.documentElement
+        .querySelector(".resetButton")
+        .addEventListener("click", GameLogic.reset);
+
+    const render = () => {
+        for (let i = 0; i < 9; i++) {
+            document.documentElement.querySelector(
+                `button[index="${i}"]`
+            ).textContent = gameboard.getGameboard()[i].getValue();
+        }
     };
 
-    return { startUp };
+    const reset = () => {
+        for (let i = 0; i < 9; i++) {
+            document.documentElement.querySelector(
+                `button[index="${i}"]`
+            ).textContent = "";
+        }
+    };
+
+    const displayWinner = (winner) => {
+        document.documentElement.querySelector(
+            ".outcome"
+        ).textContent = `${winner} has won!`;
+    };
+
+    const displayDraw = () => {
+        document.documentElement.querySelector(".outcome").textContent = "DRAW";
+    };
+
+    const resetOutcome = () => {
+        document.documentElement.querySelector(".outcome").textContent = "";
+    };
+
+    return { render, reset, displayDraw, displayWinner, resetOutcome };
 })();

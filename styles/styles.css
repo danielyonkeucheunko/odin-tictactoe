@@ -1,0 +1,47 @@
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100vh;
+    width: 100vw;
+    gap: 10px;
+    font-family: "Montserrat", sans-serif;
+}
+
+.board {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    height: 800px;
+    width: 800px;
+    border: 2px solid black;
+}
+
+.cell {
+    font-size: calc(800px / 9);
+    background-color: white;
+    border: 2px solid black;
+}
+
+.outcome {
+    font-size: 60px;
+}
+
+.resetButton {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 10px 30px;
+    font-weight: 600;
+    font-size: 18px;
+    border-radius: 10px;
+}
+
+.resetButton:hover {
+    opacity: 90%;
+}
+
+.resetButton:active {
+    opacity: 70%;
+}
